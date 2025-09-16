@@ -1,0 +1,206 @@
+<!-- Free product catalogue template
+Save this file as `index.html` and open in a browser or host with GitHub Pages.
+Edit the `products` array in the script to add/change products.
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product Catalogue — Free Template</title>
+  <style>
+    :root{
+      --bg:#f6f8fb; --card:#fff; --muted:#6b7280; --accent:#0b76ef;
+      --radius:12px; --maxw:1100px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial,Helvetica,sans-serif;margin:0;background:var(--bg);color:#111}
+    .wrap{max-width:var(--maxw);margin:28px auto;padding:20px}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between}
+    header h1{margin:0;font-size:20px}
+    .controls{display:flex;gap:8px;align-items:center}
+    .search{padding:10px 12px;border-radius:10px;border:1px solid #e6e9ef;background:#fff;min-width:220px}
+    select,button{padding:10px;border-radius:10px;border:1px solid #e6e9ef;background:#fff}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+    @media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:550px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border-radius:var(--radius);padding:12px;box-shadow:0 6px 18px rgba(14,30,37,0.06);display:flex;flex-direction:column}
+    .imgwrap{height:180px;border-radius:10px;overflow:hidden;background:#f0f4f9;display:flex;align-items:center;justify-content:center}
+    .imgwrap img{width:100%;height:100%;object-fit:cover}
+    .meta{padding:10px 4px;display:flex;flex-direction:column;gap:6px}
+    .title{font-weight:600;font-size:15px}
+    .desc{font-size:13px;color:var(--muted);min-height:36px}
+    .price-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .price{font-weight:700;color:var(--accent)}
+    .btn{padding:8px 10px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
+    .ghost{background:transparent;border:1px solid #e6e9ef;color:var(--muted)}
+    .filters{display:flex;gap:8px;align-items:center}
+    footer{margin-top:28px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* modal */
+    .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:18px}
+    .modal{background:var(--card);max-width:920px;width:100%;border-radius:12px;padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .modal .imgwrap{height:380px}
+    .modal h2{margin:0}
+    .close{position:absolute;right:16px;top:10px;background:transparent;border:0;font-size:20px;cursor:pointer}
+    @media (max-width:800px){.modal{grid-template-columns:1fr}}
+
+    /* empty */
+    .empty{padding:28px;text-align:center;color:var(--muted);background:#fff;border-radius:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>My Product Catalogue</h1>
+        <div style="color:var(--muted);font-size:13px">Free, responsive HTML/CSS template — edit products in the script</div>
+      </div>
+
+      <div class="controls">
+        <input id="search" class="search" placeholder="Search products..." />
+        <div class="filters">
+          <select id="category">
+            <option value="all">All categories</option>
+          </select>
+          <select id="sort">
+            <option value="default">Sort: Featured</option>
+            <option value="price-asc">Price: Low → High</option>
+            <option value="price-desc">Price: High → Low</option>
+            <option value="name-asc">Name A → Z</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty" style="display:none">No products found. Try adjusting filters.</div>
+    </main>
+
+    <footer>Template by you · Edit product details in the JavaScript section below</footer>
+  </div>
+
+  <!-- modal -->
+  <div id="modalBack" class="modal-back" role="dialog" aria-hidden="true">
+    <div class="modal" role="document">
+      <button id="closeModal" class="close">✕</button>
+      <div>
+        <div class="imgwrap"><img id="modalImg" src="" alt=""></div>
+      </div>
+      <div>
+        <h2 id="modalTitle"></h2>
+        <p id="modalCategory" style="color:var(--muted);margin-top:6px"></p>
+        <p id="modalDesc" style="margin-top:10px;color:#333"></p>
+        <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+          <div style="font-weight:700;font-size:18px;color:var(--accent)" id="modalPrice"></div>
+          <button id="orderBtn" class="btn">Order / Enquire</button>
+          <button id="closeBtn" class="ghost">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* -----------------
+       SAMPLE PRODUCTS
+       Edit or replace this array with your products.
+       Fields: id, name, category, price (string), img (url), desc
+       -----------------*/
+    const products = [
+      {id:1,name:'Classic PVC Car Mat (7D)',category:'Car Mats',price:'₹650',img:'https://via.placeholder.com/800x600?text=Car+Mat+1',desc:'Durable 7D PVC car mat with anti-skid backing. Fits most sedans.'},
+      {id:2,name:'Premium Wheel Cap',category:'Accessories',price:'₹120',img:'https://via.placeholder.com/800x600?text=Wheel+Cap',desc:'Stylish wheel cap with chrome finish. Fits standard alloy wheels.'},
+      {id:3,name:'All-weather Trunk Mat',category:'Car Mats',price:'₹850',img:'https://via.placeholder.com/800x600?text=Trunk+Mat',desc:'Waterproof trunk mat with raised edges to protect from spills.'},
+      {id:4,name:'PVC Cushion',category:'Home',price:'₹450',img:'https://via.placeholder.com/800x600?text=PVC+Cushion',desc:'Comfortable PVC cushion for home and car use.'},
+      {id:5,name:'Car Seat Cover (Full)',category:'Accessories',price:'₹2200',img:'https://via.placeholder.com/800x600?text=Seat+Cover',desc:'Full coverage car seat cover with breathable fabric and easy cleaning.'},
+      {id:6,name:'Floor Protection Sheet',category:'Car Mats',price:'₹350',img:'https://via.placeholder.com/800x600?text=Floor+Sheet',desc:'Thin protection sheet for quick use and replacement.'}
+    ];
+
+    /* ---------- build category list ----------*/
+    const categorySelect = document.getElementById('category');
+    const cats = Array.from(new Set(products.map(p=>p.category))).sort();
+    cats.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;categorySelect.appendChild(o)})
+
+    /* ---------- helpers ----------*/
+    const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
+
+    function render(items){
+      grid.innerHTML='';
+      if(items.length===0){empty.style.display='block';return} else {empty.style.display='none'}
+      for(const p of items){
+        const card = document.createElement('article');card.className='card';
+        card.innerHTML = `
+          <div class="imgwrap"><img loading="lazy" src="${p.img}" alt="${p.name}"></div>
+          <div class="meta">
+            <div class="title">${p.name}</div>
+            <div class="desc">${p.desc}</div>
+            <div class="price-row">
+              <div class="price">${p.price}</div>
+              <div style="display:flex;gap:8px">
+                <button class="btn" data-id="${p.id}">View</button>
+                <button class="ghost" onclick="window.location='mailto:your@email.com?subject=Order%20${encodeURIComponent(p.name)}'">Buy</button>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+      // attach view listeners
+      grid.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',e=>openModal(parseInt(b.dataset.id))))
+    }
+
+    function openModal(id){
+      const p = products.find(x=>x.id===id); if(!p) return;
+      document.getElementById('modalImg').src = p.img;
+      document.getElementById('modalTitle').textContent = p.name;
+      document.getElementById('modalCategory').textContent = p.category;
+      document.getElementById('modalDesc').textContent = p.desc;
+      document.getElementById('modalPrice').textContent = p.price;
+      document.getElementById('orderBtn').onclick = ()=>window.location = `mailto:your@email.com?subject=Order%20${encodeURIComponent(p.name)}&body=I%20am%20interested%20in%20${encodeURIComponent(p.name)}%20(Ref%20ID%20${p.id}).%20Please%20share%20pricing%20and%20delivery%20details.`;
+
+      const back = document.getElementById('modalBack'); back.style.display='flex'; back.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){const back=document.getElementById('modalBack');back.style.display='none';back.setAttribute('aria-hidden','true')}
+
+    document.getElementById('closeModal').addEventListener('click',closeModal);
+    document.getElementById('closeBtn').addEventListener('click',closeModal);
+    document.getElementById('modalBack').addEventListener('click',e=>{if(e.target.id==='modalBack')closeModal()})
+
+    /* ---------- search + filters ----------*/
+    const searchInput = document.getElementById('search');
+    const sortSelect = document.getElementById('sort');
+
+    function applyFilters(){
+      const q = searchInput.value.trim().toLowerCase();
+      const cat = categorySelect.value;
+      let items = products.filter(p=>{
+        const inQ = p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+        const inCat = (cat==='all') ? true : p.category===cat;
+        return inQ && inCat;
+      });
+      // sort
+      const sort = sortSelect.value;
+      if(sort==='price-asc') items.sort((a,b)=>parsePrice(a.price)-parsePrice(b.price));
+      else if(sort==='price-desc') items.sort((a,b)=>parsePrice(b.price)-parsePrice(a.price));
+      else if(sort==='name-asc') items.sort((a,b)=>a.name.localeCompare(b.name));
+
+      render(items);
+    }
+
+    function parsePrice(priceStr){
+      // crude parse: remove non digits and parse as number. adjust if you use decimals.
+      const n = priceStr.replace(/[^0-9\.]/g,'');
+      return parseFloat(n)||0;
+    }
+
+    searchInput.addEventListener('input',applyFilters);
+    categorySelect.addEventListener('change',applyFilters);
+    sortSelect.addEventListener('change',applyFilters);
+
+    // initial render
+    render(products);
+  </script>
+</body>
+</html>
