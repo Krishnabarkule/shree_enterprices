@@ -114,7 +114,11 @@ Edit the `products` array in the script to add/change products.
         name: 'Classic PVC Car Mat (7D)',
         category: 'Car Mats',
         price: '₹650',
-        img: 'images/product1.jpg',   // ✅ local image
+        imgs: [
+          'images/product1a.jpg',
+          'images/product1b.jpg',
+          'images/product1c.jpg'
+        ],
         desc: 'Durable 7D PVC car mat with anti-skid backing. Fits most sedans.'
       },
       {
@@ -122,10 +126,14 @@ Edit the `products` array in the script to add/change products.
         name: 'Premium Wheel Cap',
         category: 'Accessories',
         price: '₹120',
-        img: 'images/product2.jpg',   // ✅ local image
+        imgs: [
+          'images/product2a.jpg',
+          'images/product2b.jpg'
+        ],
         desc: 'Stylish wheel cap with chrome finish. Fits standard alloy wheels.'
       }
     ];
+
 
     /* ---------- build category list ----------*/
     const categorySelect = document.getElementById('category');
