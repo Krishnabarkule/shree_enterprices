@@ -54,7 +54,7 @@ Edit the `products` array in the script to add/change products.
   <div class="wrap">
     <header>
       <div>
-        <h1> Shree Interprices And Distributers </h1>
+        <h1> Shree Enterprices And Distributers </h1>
         <div style="color:var(--muted);font-size:13px">We are the company authorised distributer </div>
       </div>
 
@@ -109,12 +109,22 @@ Edit the `products` array in the script to add/change products.
        Fields: id, name, category, price (string), img (url), desc
        -----------------*/
     const products = [
-      {id:1,name:'Classic PVC Car Mat (7D)',category:'Car Mats',price:'₹650',img:'https://via.placeholder.com/800x600?text=Car+Mat+1',desc:'Durable 7D PVC car mat with anti-skid backing. Fits most sedans.'},
-      {id:2,name:'Premium Wheel Cap',category:'Accessories',price:'₹120',img:'https://via.placeholder.com/800x600?text=Wheel+Cap',desc:'Stylish wheel cap with chrome finish. Fits standard alloy wheels.'},
-      {id:3,name:'All-weather Trunk Mat',category:'Car Mats',price:'₹850',img:'https://via.placeholder.com/800x600?text=Trunk+Mat',desc:'Waterproof trunk mat with raised edges to protect from spills.'},
-      {id:4,name:'PVC Cushion',category:'Home',price:'₹450',img:'https://via.placeholder.com/800x600?text=PVC+Cushion',desc:'Comfortable PVC cushion for home and car use.'},
-      {id:5,name:'Car Seat Cover (Full)',category:'Accessories',price:'₹2200',img:'https://via.placeholder.com/800x600?text=Seat+Cover',desc:'Full coverage car seat cover with breathable fabric and easy cleaning.'},
-      {id:6,name:'Floor Protection Sheet',category:'Car Mats',price:'₹350',img:'https://via.placeholder.com/800x600?text=Floor+Sheet',desc:'Thin protection sheet for quick use and replacement.'}
+      {
+        id: 1,
+        name: 'Classic PVC Car Mat (7D)',
+        category: 'Car Mats',
+        price: '₹650',
+        img: 'images/product1.jpg',   // ✅ local image
+        desc: 'Durable 7D PVC car mat with anti-skid backing. Fits most sedans.'
+      },
+      {
+        id: 2,
+        name: 'Premium Wheel Cap',
+        category: 'Accessories',
+        price: '₹120',
+        img: 'images/product2.jpg',   // ✅ local image
+        desc: 'Stylish wheel cap with chrome finish. Fits standard alloy wheels.'
+      }
     ];
 
     /* ---------- build category list ----------*/
