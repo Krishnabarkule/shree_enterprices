@@ -54,8 +54,8 @@ Edit the `products` array in the script to add/change products.
   <div class="wrap">
     <header>
       <div>
-        <h1> Shree Enterprices And Distributers </h1>
-        <div style="color:var(--muted);font-size:13px">We are the company authorised distributer </div>
+        <h1>My Product Catalogue</h1>
+        <div style="color:var(--muted);font-size:13px">Free, responsive HTML/CSS template — edit products in the script</div>
       </div>
 
       <div class="controls">
@@ -106,35 +106,12 @@ Edit the `products` array in the script to add/change products.
     /* -----------------
        SAMPLE PRODUCTS
        Edit or replace this array with your products.
-       Fields: id, name, category, price (string), img (url), desc
+       Fields: id, name, category, price (string), imgs (array), desc
        -----------------*/
     const products = [
-      {
-        id: 1,
-        name: 'Cushion Mats 12MM',
-        category: 'Floor Mats',
-        price: '₹33 SQFT',
-        imgs: [
-          'image/all_cusion.jpg',
-          'image/all_cusion_2.jpg',
-          'image/all_cusion_3.jpg'
-        ],
-        desc: 'Durable cushion mat, anti-skid backing.'
-      },
-      {
-        id: 2,
-        name: 'Premium Wheel Cap',
-        category: 'Accessories',
-        price: '₹120',
-        imgs: [
-          'image/product2a.jpg',
-          'image/product2b.jpg'
-        ],
-        desc: 'Stylish wheel cap with chrome finish.'
-      }
+      {id:1,name:'Cushion Mats 12MM',category:'Floor Mats',price:'₹33 SQFT',imgs:['image/all_cusion.jpg','image/all_cusion.jpg','image/all_cusion.jpg'],desc:'Durable cushion mat, anti-skid backing.'},
+      {id:2,name:'Premium Wheel Cap',category:'Accessories',price:'₹120',imgs:['image/product2a.jpg','image/product2b.jpg'],desc:'Stylish wheel cap with chrome finish.'}
     ];
-
-
 
     /* ---------- build category list ----------*/
     const categorySelect = document.getElementById('category');
@@ -150,8 +127,9 @@ Edit the `products` array in the script to add/change products.
       if(items.length===0){empty.style.display='block';return} else {empty.style.display='none'}
       for(const p of items){
         const card = document.createElement('article');card.className='card';
+        const firstImg = (p.imgs && p.imgs.length) ? p.imgs[0] : '';
         card.innerHTML = `
-          <div class="imgwrap"><img loading="lazy" src="${p.img}" alt="${p.name}"></div>
+          <div class="imgwrap"><img loading="lazy" src="${firstImg}" alt="${p.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%22480%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f4f9%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%236b7280%22 font-size=%2220%22>Image+not+found</text></svg>'"></div>
           <div class="meta">
             <div class="title">${p.name}</div>
             <div class="desc">${p.desc}</div>
@@ -170,18 +148,37 @@ Edit the `products` array in the script to add/change products.
       grid.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',e=>openModal(parseInt(b.dataset.id))))
     }
 
-    function openModal(id){
-      const p = products.find(x=>x.id===id); if(!p) return;
-      document.getElementById('modalImg').src = p.img;
-      document.getElementById('modalTitle').textContent = p.name;
-      document.getElementById('modalCategory').textContent = p.category;
-      document.getElementById('modalDesc').textContent = p.desc;
-      document.getElementById('modalPrice').textContent = p.price;
-      document.getElementById('orderBtn').onclick = ()=>window.location = `mailto:your@email.com?subject=Order%20${encodeURIComponent(p.name)}&body=I%20am%20interested%20in%20${encodeURIComponent(p.name)}%20(Ref%20ID%20${p.id}).%20Please%20share%20pricing%20and%20delivery%20details.`;
+    /* ---------- modal slider logic ----------*/
+    let currentIndex = 0;
+    let currentProduct = null;
 
-      const back = document.getElementById('modalBack'); back.style.display='flex'; back.setAttribute('aria-hidden','false');
+    function openModal(id){
+      currentProduct = products.find(x=>x.id===id); if(!currentProduct) return;
+      currentIndex = 0;
+      updateModalImage();
+      document.getElementById('modalTitle').textContent = currentProduct.name;
+      document.getElementById('modalCategory').textContent = currentProduct.category;
+      document.getElementById('modalDesc').textContent = currentProduct.desc;
+      document.getElementById('modalPrice').textContent = currentProduct.price;
+      document.getElementById('orderBtn').onclick = ()=>window.location = `mailto:your@email.com?subject=Order%20${encodeURIComponent(currentProduct.name)}&body=I%20am%20interested%20in%20${encodeURIComponent(currentProduct.name)}%20(Ref%20ID%20${currentProduct.id}).%20Please%20share%20pricing%20and%20delivery%20details.`;
+      document.getElementById('modalBack').style.display='flex'; document.getElementById('modalBack').setAttribute('aria-hidden','false');
     }
-    function closeModal(){const back=document.getElementById('modalBack');back.style.display='none';back.setAttribute('aria-hidden','true')}
+
+    function updateModalImage(){
+      const imgEl = document.getElementById('modalImg');
+      const imgs = (currentProduct && currentProduct.imgs && currentProduct.imgs.length) ? currentProduct.imgs : [''];
+      imgEl.src = imgs[currentIndex] || '';
+      imgEl.onerror = () => { imgEl.src = 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f4f9%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%236b7280%22 font-size=%2220%22>Image+not+found</text></svg>'}
+      // update counter (optional)
+      const ctr = document.getElementById('imgCounter'); if(ctr) ctr.textContent = `${currentIndex+1} / ${imgs.length}`;
+    }
+
+    document.addEventListener('click',function(e){
+      if(e.target && e.target.id==='prevImg'){ if(!currentProduct) return; const len=currentProduct.imgs.length; currentIndex=(currentIndex-1+len)%len; updateModalImage(); }
+      if(e.target && e.target.id==='nextImg'){ if(!currentProduct) return; const len=currentProduct.imgs.length; currentIndex=(currentIndex+1)%len; updateModalImage(); }
+    });
+
+    function closeModal(){ const back=document.getElementById('modalBack'); back.style.display='none'; back.setAttribute('aria-hidden','true'); }
 
     document.getElementById('closeModal').addEventListener('click',closeModal);
     document.getElementById('closeBtn').addEventListener('click',closeModal);
@@ -209,7 +206,6 @@ Edit the `products` array in the script to add/change products.
     }
 
     function parsePrice(priceStr){
-      // crude parse: remove non digits and parse as number. adjust if you use decimals.
       const n = priceStr.replace(/[^0-9\.]/g,'');
       return parseFloat(n)||0;
     }
@@ -221,5 +217,7 @@ Edit the `products` array in the script to add/change products.
     // initial render
     render(products);
   </script>
+</body>
+</html>
 </body>
 </html>
