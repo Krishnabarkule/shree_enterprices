@@ -4,7 +4,7 @@
     "name": "Cushion Mats 12MM",
     "category": "Floor Mats",
     "price": "₹33 SQFT",
-    "imgs": ["image/all_clr_cushion.jpg","image/all_cusion.jpg","image/cushion_roll.jpg"],
+    "imgs": ["image/all_clr_cushion.jpg","image/all_cusion.jpg","image/cushion_roll.jpg","image/cushion_side.jpg","image/cushion_width.jpg"],
     "desc": "Width of the rolls : 2ft & 4FT. Length : 40 Ft. 2ft (roll) = 80 Sft; 4ft (roll) = 160 Sft."
   },
   {
@@ -12,7 +12,7 @@
     "name": "PVC turf (Kata Mat)",
     "category": "Floor Mats",
     "price": "₹30 SQFT",
-    "imgs": ["image/PVC_turf.jpg","image/PVC_full.jpg","image/PVC_turf_2.jpg"],
+    "imgs": ["image/PVC_turf.jpg","image/PVC_full.jpg","image/PVC_turf_2.jpg","image/PVC_side.jpg"],
     "desc": "Width of the rolls : 2ft & 4FT. Length : 50 Ft. 2ft (roll) = 100 Sft."
   }
 ]
